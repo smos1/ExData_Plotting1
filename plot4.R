@@ -1,0 +1,35 @@
+setwd("power")
+dataset<- read.table("household_power_consumption.txt", sep=";", header=TRUE, colClasses="character")
+dataset$Date <- as.Date(dataset$Date, format="%d/%m/%Y")
+dataset$Time <- strptime(dataset$Time, format="%H:%M:%S")
+dataset$Date<- as.numeric(dataset$Date)
+dataset <- subset(dataset, Date==13545 |Date==13546)
+dataset$Global_active_power<- as.numeric(dataset$Global_active_power)
+
+par(mfcol=c(2,2), cex=0.5)
+
+plot(dataset$Global_active_power, type="l", xaxt="n", ylab="Global Active Power (kilowatts)", xlab="")
+axlabels<- c("Thu", "Fri", "Sat")
+axcoord<-c(1,1440,2880)
+axis(1, at=axcoord, labels=axlabels)
+
+plot(dataset$Sub_metering_1, type="l", ylab="Energy sub metering", xaxt="n", xlab="")
+points(dataset$Sub_metering_2, type="l", col="red")
+points(dataset$Sub_metering_3, type="l", col="blue")
+legend("topright", lty=c(1,1,1), col=c("black", "red", "blue"), legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"), cex=0.5)
+axlabels<- c("Thu", "Fri", "Sat")
+axcoord<-c(1,1440,2880)
+axis(1, at=axcoord, labels=axlabels)
+
+plot(dataset$Voltage, type="l", xaxt="n", ylab="Voltage", xlab="datetime")
+axlabels<- c("Thu", "Fri", "Sat")
+axcoord<-c(1,1440,2880)
+axis(1, at=axcoord, labels=axlabels)
+
+plot(dataset$Global_reactive_power, type="l", xaxt="n", ylab="Global_reactive_power", xlab="datetime")
+axlabels<- c("Thu", "Fri", "Sat")
+axcoord<-c(1,1440,2880)
+axis(1, at=axcoord, labels=axlabels)
+
+dev.copy(png, file="plot4.png")
+dev.off()
